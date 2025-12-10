@@ -2165,3 +2165,54 @@ input:checked + .slider:before {
      c o l o r :   v a r ( - - p r i m a r y - c o l o r ) ;  
  }  
  
+/* GitHub Link in Header */
+.right-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.github-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.05);
+  transition: var(--transition);
+  border: 1px solid transparent;
+}
+
+.github-link:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .github-link {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .github-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.github-link svg {
+  opacity: 0.8;
+}
+
+.github-link:hover svg {
+  opacity: 1;
+}
+
