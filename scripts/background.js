@@ -21,7 +21,29 @@ chrome.commands.onCommand.addListener(async (command) => {
       // Send message to content script to trigger block action
       chrome.tabs.sendMessage(tab.id, { action: 'blockUser' }, (response) => {
         if (chrome.runtime.lastError) {
-          console.error('Error sending message:', chrome.runtime.lastError);
+          console.warn('Initial message failed, attempting to inject scripts...', chrome.runtime.lastError.message);
+          
+          // Try to inject scripts if they are missing (e.g. after extension reload)
+          chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            files: ['scripts/utils.js', 'scripts/content.js']
+          }, () => {
+            if (chrome.runtime.lastError) {
+              console.error('Script injection failed:', chrome.runtime.lastError.message);
+            } else {
+              console.log('Scripts injected successfully, retrying command...');
+              // Retry sending the message
+              setTimeout(() => {
+                chrome.tabs.sendMessage(tab.id, { action: 'blockUser' }, (retryResponse) => {
+                  if (chrome.runtime.lastError) {
+                    console.error('Retry failed:', chrome.runtime.lastError.message);
+                  } else {
+                    console.log('Block command sent after injection', retryResponse);
+                  }
+                });
+              }, 100); // Small delay to ensure listeners are ready
+            }
+          });
         } else {
           console.log('Block command sent to content script', response);
         }
