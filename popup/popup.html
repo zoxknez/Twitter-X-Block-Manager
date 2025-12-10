@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=420, initial-scale=1.0">
+  <title>Twitter/X Block Manager</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Left Panel -->
+  <div class="left-panel">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-top">
+      <h1 class="title">
+        <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+        </svg>
+        <span data-i18n="extensionName">Block Manager</span>
+      </h1>
+      <div class="header-controls">
+        <div class="language-switcher">
+          <button class="lang-btn active" data-lang="sr" title="Srpski">SR</button>
+          <button class="lang-btn" data-lang="en" title="English">EN</button>
+        </div>
+        <button id="themeToggle" class="theme-toggle" title="Toggle Dark Mode">
+          <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-item">
+        <span class="stat-value" id="totalBlocked">0</span>
+        <span class="stat-label" data-i18n="totalBlocked">Blokirano</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="todayBlocked">0</span>
+        <span class="stat-label" data-i18n="todayBlocked">Danas</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="weekBlocked">0</span>
+        <span class="stat-label" data-i18n="weekBlocked">Ove nedelje</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="avgPerDay">0</span>
+        <span class="stat-label" data-i18n="avgPerDay">Prosek/dan</span>
+      </div>
+    </div>
+    
+  </header>
+
+  <!-- Quick Actions Panel -->
+  <div class="quick-actions-panel">
+    <h3 class="quick-actions-title" data-i18n="quickActions">Brze akcije</h3>
+    
+    <div class="quick-actions-grid">
+      <button id="quickImportBtn" class="quick-action-card">
+        <div class="quick-action-icon import-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+        </div>
+        <div class="quick-action-content">
+          <div class="quick-action-label" data-i18n="importBtn">Import</div>
+          <div class="quick-action-desc" data-i18n="importDesc">Uvezi korisnike</div>
+        </div>
+      </button>
+
+      <button id="quickExportBtn" class="quick-action-card">
+        <div class="quick-action-icon export-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+        </div>
+        <div class="quick-action-content">
+          <div class="quick-action-label" data-i18n="exportBtn">Export</div>
+          <div class="quick-action-desc" data-i18n="exportDesc">Izvezi listu</div>
+        </div>
+      </button>
+
+      <button id="quickStatsBtn" class="quick-action-card">
+        <div class="quick-action-icon stats-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+        </div>
+        <div class="quick-action-content">
+          <div class="quick-action-label" data-i18n="statsBtn">Statistika</div>
+          <div class="quick-action-desc" data-i18n="statsDesc">Prikaži grafikon</div>
+        </div>
+      </button>
+
+      <button id="quickHistoryBtn" class="quick-action-card">
+        <div class="quick-action-icon history-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+        <div class="quick-action-content">
+          <div class="quick-action-label" data-i18n="historyBtn">Istorija</div>
+          <div class="quick-action-desc" data-i18n="historyDesc">Timeline prikaz</div>
+        </div>
+      </button>
+
+      <button id="quickBackupBtn" class="quick-action-card">
+        <div class="quick-action-icon backup-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="18" x2="12" y2="12"></line>
+            <line x1="9" y1="15" x2="15" y2="15"></line>
+          </svg>
+        </div>
+        <div class="quick-action-content">
+          <div class="quick-action-label" data-i18n="backupBtn">Backup</div>
+          <div class="quick-action-desc" data-i18n="backupDesc">Sačuvaj podatke</div>
+        </div>
+      </button>
+
+      <button id="quickClearBtn" class="quick-action-card danger">
+        <div class="quick-action-icon clear-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+        </div>
+        <div class="quick-action-content">
+          <div class="quick-action-label" data-i18n="clearAllBtn">Obriši sve</div>
+          <div class="quick-action-desc" data-i18n="clearAllDesc">Očisti kompletno</div>
+        </div>
+      </button>
+
+      <button id="quickSettingsBtn" class="quick-action-card">
+        <div class="quick-action-icon settings-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 1v6m0 6v6m-5.2-10.2l4.2 4.2m6 0l4.2-4.2m-14.4 0l4.2 4.2m6 0l4.2 4.2"></path>
+          </svg>
+        </div>
+        <div class="quick-action-content">
+          <div class="quick-action-label" data-i18n="settingsBtn">Podešavanja</div>
+          <div class="quick-action-desc" data-i18n="settingsDesc">Opcije i tema</div>
+        </div>
+      </button>
+
+      <button id="quickRefreshBtn" class="quick-action-card">
+        <div class="quick-action-icon refresh-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+        </div>
+        <div class="quick-action-content">
+          <div class="quick-action-label" data-i18n="refreshBtn">Osveži</div>
+          <div class="quick-action-desc" data-i18n="refreshDesc">Učitaj ponovo</div>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-right">
+        <button id="helpBtn" class="footer-link help-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <span data-i18n="helpBtn">Uputstvo</span>
+        </button>
+        <a href="https://mojportfolio.vercel.app" target="_blank" class="footer-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span data-i18n="authorLink">Autor</span>
+        </a>
+        <a href="https://www.paypal.com/paypalme/o0o0o0o0o0o0o" target="_blank" class="footer-link donate">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          <span data-i18n="donateLink">Doniraj</span>
+        </a>
+        <div class="footer-version">
+          <span data-i18n="version">v</span>1.0.0
+        </div>
+      </div>
+    </div>
+  </footer>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="right-panel">
+    <div class="right-panel-header">
+      <h2 class="right-panel-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+        </svg>
+        <span data-i18n="blockedUsers">Blokirani korisnici</span>
+      </h2>
+    </div>
+    
+    <!-- Search and Filters -->
+    <div class="right-panel-search">
+      <div class="search-box">
+        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <input 
+          type="text" 
+          id="searchInput" 
+          class="search-input" 
+          placeholder="Pretraži blokiran..." 
+          data-i18n-placeholder="searchPlaceholder"
+        >
+        <button id="clearSearch" class="clear-btn" style="display: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <!-- Tags Filter -->
+      <div id="tagsFilter" class="tags-filter" style="display: none;">
+        <div class="tags-filter-header">
+          <span class="filter-label" data-i18n="filterByTags">Filter po tagovima:</span>
+          <button id="clearTagsFilter" class="clear-tags-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+            <span data-i18n="clearFilter">Očisti</span>
+          </button>
+        </div>
+        <div id="tagsList" class="tags-list">
+          <!-- Tags loaded dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Blocked Users List -->
+    <div class="right-panel-content">
+      <div id="listContainer" class="list-container">
+        <div class="list-header">
+          <label class="checkbox-wrapper">
+            <input type="checkbox" id="selectAll" class="select-all-checkbox">
+            <span class="checkbox-label" data-i18n="selectAll">Izaberi sve</span>
+          </label>
+          <span class="list-count" id="listCount">0</span>
+        </div>
+        
+        <div id="blockedList" class="blocked-list">
+          <!-- Loaded dynamically -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+          </svg>
+          <p class="empty-title" data-i18n="emptyTitle">Nema blokiranih korisnika</p>
+          <p class="empty-text" data-i18n="emptyText">Koristite Alt+B na profilu da blokirate korisnika</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Modal -->
+  <div id="importModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" data-i18n="importTitle">Import korisnika</h2>
+        <button class="modal-close" id="closeImportModal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-description" data-i18n="importDescription">
+          Unesite korisnička imena po liniji. Format: <code>@username</code> ili <code>@username | razlog</code>
+        </p>
+        <textarea 
+          id="importTextarea" 
+          class="import-textarea" 
+          placeholder="@primer1&#10;@primer2 | spam bot&#10;@primer3 | offensive content"
+          data-i18n-placeholder="importPlaceholder"
+          rows="10"
+        ></textarea>
+      </div>
+      <div class="modal-footer">
+        <button id="cancelImport" class="btn btn-secondary" data-i18n="cancelBtn">Otkaži</button>
+        <button id="confirmImport" class="btn btn-primary" data-i18n="confirmImportBtn">Import</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Reason Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" data-i18n="editReasonTitle">Uredi razlog</h2>
+        <button class="modal-close" id="closeEditModal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editUsername">
+        <label class="form-label" data-i18n="reasonLabel">Razlog blokiranja:</label>
+        <textarea 
+          id="editReason" 
+          class="edit-textarea" 
+          placeholder="Unesite razlog..."
+          data-i18n-placeholder="reasonPlaceholder"
+          rows="4"
+        ></textarea>
+        
+        <label class="form-label" data-i18n="tagsLabel" style="margin-top: 16px;">Tagovi:</label>
+        <div class="predefined-tags">
+          <button class="predefined-tag" data-tag="#spam">#spam</button>
+          <button class="predefined-tag" data-tag="#bot">#bot</button>
+          <button class="predefined-tag" data-tag="#toxic">#toxic</button>
+          <button class="predefined-tag" data-tag="#scam">#scam</button>
+          <button class="predefined-tag" data-tag="#harassment">#harassment</button>
+        </div>
+        <input 
+          type="text" 
+          id="editTagInput" 
+          class="custom-tag-input" 
+          placeholder="+ Dodaj custom tag (Enter)"
+          data-i18n-placeholder="customTagPlaceholder"
+        >
+        <div id="editTags" class="selected-tags">
+          <!-- Selected tags appear here -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="cancelEdit" class="btn btn-secondary" data-i18n="cancelBtn">Otkaži</button>
+        <button id="saveEditBtn" class="btn btn-primary" data-i18n="saveBtn">Sačuvaj</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Timeline Modal -->
+  <div id="historyModal" class="modal">
+    <div class="modal-content timeline-modal">
+      <div class="modal-header">
+        <h2 class="modal-title" data-i18n="historyTitle">Block History</h2>
+        <button class="modal-close" id="closeHistoryModal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="timelineContent" class="history-timeline">
+          <!-- Timeline loaded dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Modal -->
+  <div id="statsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" data-i18n="statsTitle">Statistika</h2>
+        <button class="modal-close" id="closeStatsModal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="stats-summary">
+          <div class="stat-box">
+            <div class="stat-number" id="modalTotalBlocked">0</div>
+            <div class="stat-desc" data-i18n="totalBlocked">Blokirano</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number" id="modalAvgPerDay">0</div>
+            <div class="stat-desc" data-i18n="avgPerDay">Prosek/dan</div>
+          </div>
+        </div>
+        
+        <h3 class="chart-title" data-i18n="blockingActivity">Aktivnost (poslednjih 7 dana)</h3>
+        <div class="chart-container" id="statsChart">
+          <!-- Bars will be injected here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help Modal -->
+  <div id="helpModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" data-i18n="helpTitle">Uputstvo za korišćenje</h2>
+        <button class="modal-close" id="closeHelpModal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body help-content">
+        <div class="help-section">
+          <h3 data-i18n="helpSection1Title">🚀 Kako blokirat korisnika?</h3>
+          <p data-i18n="helpSection1Text">Idite na profil korisnika na Twitter/X i pritisnite <strong>Alt+B</strong> prečicu. Korisnik će biti automatski blokiran i dodat u vašu listu.</p>
+        </div>
+        
+        <div class="help-section">
+          <h3 data-i18n="helpSection2Title">📊 Statistika</h3>
+          <p data-i18n="helpSection2Text">U header-u vidite broj blokiranih korisnika, broj blokiranih danas, ove nedelje i prosek po danu.</p>
+        </div>
+        
+        <div class="help-section">
+          <h3 data-i18n="helpSection3Title">⚡ Brze akcije</h3>
+          <ul>
+            <li><strong data-i18n="helpImport">Import:</strong> <span data-i18n="helpImportText">Uvezite listu korisnika iz tekstualne datoteke</span></li>
+            <li><strong data-i18n="helpExport">Export:</strong> <span data-i18n="helpExportText">Izvezite vašu listu u JSON format</span></li>
+            <li><strong data-i18n="helpStats">Statistika:</strong> <span data-i18n="helpStatsText">Prikažite grafikon aktivnosti</span></li>
+            <li><strong data-i18n="helpHistory">Istorija:</strong> <span data-i18n="helpHistoryText">Pregledajte timeline blokiranih korisnika</span></li>
+            <li><strong data-i18n="helpBackup">Backup:</strong> <span data-i18n="helpBackupText">Sačuvajte kompletnu backup kopiju</span></li>
+            <li><strong data-i18n="helpClear">Obriši sve:</strong> <span data-i18n="helpClearText">Očistite kompletnu listu (oprezno!)</span></li>
+          </ul>
+        </div>
+        
+        <div class="help-section">
+          <h3 data-i18n="helpSection4Title">🎯 Upravljanje listom</h3>
+          <p data-i18n="helpSection4Text">U desnom panelu možete pretraživati, filtrovati po tagovima, editovati razlog blokiranja i brisati pojedinačne korisnike.</p>
+        </div>
+        
+        <div class="help-section">
+          <h3 data-i18n="helpSection5Title">🌙 Tamna tema</h3>
+          <p data-i18n="helpSection5Text">Kliknite na mesec/sunce ikonicu u header-u da promenite temu.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" data-i18n="settingsTitle">Podešavanja</h2>
+        <button class="modal-close" id="closeSettingsModal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Shortcuts -->
+        <div class="settings-section">
+          <div class="settings-row">
+            <div class="settings-info">
+              <div class="settings-label" data-i18n="shortcutLabel">Prečica za blokiranje</div>
+              <div class="settings-desc" data-i18n="shortcutDesc">Kliknite da promenite prečicu (trenutno: Alt+B)</div>
+            </div>
+            <button id="openShortcutsBtn" class="btn btn-secondary btn-sm" data-i18n="openShortcutsBtn">Promeni</button>
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="settings-section">
+          <div class="settings-row">
+            <div class="settings-info">
+              <div class="settings-label" data-i18n="notificationsLabel">Notifikacije</div>
+              <div class="settings-desc" data-i18n="notificationsDesc">Prikaži obaveštenja pri blokiranju</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="notificationsToggle">
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Auto Close -->
+        <div class="settings-section">
+          <div class="settings-row">
+            <div class="settings-info">
+              <div class="settings-label" data-i18n="autoCloseLabel">Auto-zatvaranje</div>
+              <div class="settings-desc" data-i18n="autoCloseDesc">Zatvori popup nakon akcije</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="autoCloseToggle">
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Theme -->
+        <div class="settings-section">
+          <div class="settings-label" data-i18n="themeLabel" style="margin-bottom: 10px;">Tema</div>
+          <div class="theme-selector">
+            <label class="theme-option">
+              <input type="radio" name="themeSelector" value="light">
+              <span class="theme-box light">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                Light
+              </span>
+            </label>
+            <label class="theme-option">
+              <input type="radio" name="themeSelector" value="dark">
+              <span class="theme-box dark">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                Dark
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Language -->
+        <div class="settings-section" style="border-bottom: none;">
+          <div class="settings-label" data-i18n="languageLabel" style="margin-bottom: 10px;">Jezik</div>
+          <select id="settingsLangSelector" class="settings-select">
+            <option value="sr">Srpski</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">
+    <div class="toast-icon"></div>
+    <div class="toast-message"></div>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

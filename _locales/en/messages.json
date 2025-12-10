@@ -1,0 +1,14 @@
+{
+  "extensionName": {
+    "message": "Block Manager for Twitter/X",
+    "description": "Extension name"
+  },
+  "extensionDescription": {
+    "message": "Quickly block users on Twitter/X with Alt+B shortcut and manage blocked users through a manager.",
+    "description": "Extension description"
+  },
+  "commandDescription": {
+    "message": "Block user from current profile page",
+    "description": "Block command description"
+  }
+}

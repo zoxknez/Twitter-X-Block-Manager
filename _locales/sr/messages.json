@@ -1,0 +1,14 @@
+{
+  "extensionName": {
+    "message": "Block Manager for Twitter/X",
+    "description": "Naziv ekstenzije"
+  },
+  "extensionDescription": {
+    "message": "Brzo blokirajte korisnike na Twitter/X sa Alt+B prečicom i upravljajte blokiranima kroz menadžer.",
+    "description": "Opis ekstenzije"
+  },
+  "commandDescription": {
+    "message": "Blokiraj korisnika sa trenutne stranice profila",
+    "description": "Opis komande za blokiranje"
+  }
+}
