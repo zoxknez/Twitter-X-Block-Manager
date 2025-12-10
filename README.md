@@ -1,4 +1,4 @@
-# 🚫 Block Manager for Twitter/X
+# 🚫 Block Manager for Twitter/X and 1click block
 
 [![Chrome Web Store](https://img.shields.io/badge/Chrome-Extension-blue?logo=google-chrome)](https://chrome.google.com/webstore)
 [![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/zoxknez/Twitter-X-Block-Manager)
