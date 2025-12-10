@@ -1,0 +1,94 @@
+/* Compact Item Styles */
+.blocked-item.compact {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.blocked-item.compact:hover {
+  background: var(--bg-hover);
+}
+
+.blocked-item.compact .item-header {
+  margin-bottom: 0;
+}
+
+.blocked-item.compact .item-username {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 13px;
+}
+
+.blocked-item.compact .username-text {
+  font-weight: 600;
+  color: white;
+  transition: color 0.2s ease;
+}
+
+.blocked-item.compact:hover .username-text {
+  color: var(--text-primary);
+}
+
+.blocked-item.compact .expand-icon {
+  color: rgba(255, 255, 255, 0.7);
+  transition: transform 0.3s ease, color 0.2s ease;
+}
+
+.blocked-item.compact:hover .expand-icon {
+  color: var(--text-secondary);
+}
+
+.blocked-item.compact.expanded .expand-icon {
+  transform: rotate(180deg);
+}
+
+.blocked-item.compact .item-date {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 2px;
+  transition: color 0.2s ease;
+}
+
+.blocked-item.compact:hover .item-date {
+  color: var(--text-secondary);
+}
+
+/* Hidden details in compact mode */
+.compact-details {
+  display: none;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+  animation: slideDown 0.2s ease-out;
+}
+
+.blocked-item.compact.expanded .compact-details {
+  display: block;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.item-username-full {
+  margin-bottom: 4px;
+}
+
+.item-username-full a {
+  font-weight: 700;
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.item-username-full a:hover {
+  text-decoration: underline;
+}

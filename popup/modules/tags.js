@@ -10,7 +10,10 @@ export class TagsManager {
     const tagsContainer = document.getElementById('editTags');
     if (!tagsContainer) return;
     
-    const currentTags = this.state.getCurrentEditTags();
+    const currentTags = (typeof this.state.getCurrentEditTags === 'function') 
+      ? this.state.getCurrentEditTags() 
+      : (this.state.currentEditTags || []);
+      
     const lang = this.state.getLanguage();
 
     if (currentTags.length === 0) {
@@ -42,22 +45,40 @@ export class TagsManager {
 
     if (!tagValue) return;
 
-    const currentTags = this.state.getCurrentEditTags();
+    const currentTags = (typeof this.state.getCurrentEditTags === 'function') 
+      ? this.state.getCurrentEditTags() 
+      : (this.state.currentEditTags || []);
+
     if (currentTags.includes(tagValue)) {
       tagInput.value = '';
       return;
     }
 
     currentTags.push(tagValue);
-    this.state.setCurrentEditTags(currentTags);
+    
+    if (typeof this.state.setCurrentEditTags === 'function') {
+      this.state.setCurrentEditTags(currentTags);
+    } else {
+      this.state.currentEditTags = currentTags;
+    }
+    
     this.renderEditTags();
     tagInput.value = '';
   }
 
   removeTag(tag) {
-    const currentTags = this.state.getCurrentEditTags();
+    const currentTags = (typeof this.state.getCurrentEditTags === 'function') 
+      ? this.state.getCurrentEditTags() 
+      : (this.state.currentEditTags || []);
+      
     const newTags = currentTags.filter(t => t !== tag);
-    this.state.setCurrentEditTags(newTags);
+    
+    if (typeof this.state.setCurrentEditTags === 'function') {
+      this.state.setCurrentEditTags(newTags);
+    } else {
+      this.state.currentEditTags = newTags;
+    }
+    
     this.renderEditTags();
   }
 

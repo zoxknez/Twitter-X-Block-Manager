@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     settingsManager.setupEventListeners();
     
     // Initial render
-    listRenderer.render();
+    switchViewMode('dashboard'); // Start in dashboard mode
     statsManager.update();
     
     // Setup modal close buttons
@@ -95,7 +95,16 @@ function setupEventListeners() {
 
   // Search
   document.getElementById('searchInput')?.addEventListener('input', (e) => {
+    // If user types, switch to list mode automatically
+    if (state.getViewMode() === 'dashboard' && e.target.value.trim() !== '') {
+      switchViewMode('list');
+    }
     searchManager.search(e.target.value);
+  });
+
+  // View All Button
+  document.getElementById('viewAllBtn')?.addEventListener('click', () => {
+    switchViewMode('list');
   });
 
   // Select all checkbox
@@ -173,10 +182,14 @@ function setupEventListeners() {
   document.querySelectorAll('.predefined-tag').forEach(btn => {
     btn.addEventListener('click', () => {
       const tag = btn.dataset.tag;
-      const currentTags = state.getCurrentEditTags();
+      const currentTags = state.getCurrentEditTags ? state.getCurrentEditTags() : (state.currentEditTags || []);
       if (!currentTags.includes(tag)) {
         currentTags.push(tag);
-        state.setCurrentEditTags(currentTags);
+        if (typeof state.setCurrentEditTags === 'function') {
+          state.setCurrentEditTags(currentTags);
+        } else {
+          state.currentEditTags = currentTags;
+        }
         tagsManager.renderEditTags();
       }
     });
@@ -197,13 +210,40 @@ function setupEventListeners() {
   });
 }
 
+// Switch View Mode (Dashboard <-> List)
+function switchViewMode(mode) {
+  state.setViewMode(mode);
+  
+  const searchPanel = document.getElementById('searchPanel');
+  const listHeader = document.getElementById('listHeader');
+  const rightPanelTitle = document.querySelector('.right-panel-title span');
+  const lang = state.getLanguage();
+
+  if (mode === 'dashboard') {
+    if (searchPanel) searchPanel.style.display = 'none';
+    if (listHeader) listHeader.style.display = 'none';
+    if (rightPanelTitle) rightPanelTitle.textContent = lang === 'sr' ? 'Nedavno blokirani' : 'Recently Blocked';
+  } else {
+    if (searchPanel) searchPanel.style.display = 'block';
+    if (listHeader) listHeader.style.display = 'flex';
+    if (rightPanelTitle) rightPanelTitle.textContent = lang === 'sr' ? 'Svi blokirani korisnici' : 'All Blocked Users';
+  }
+
+  listRenderer.render();
+}
+
 // Handle clicks on list items (edit, delete, unblock buttons)
 function handleListClick(e) {
   const target = e.target.closest('button');
   if (!target) return;
 
   const username = target.dataset.username;
-  if (!username) return;
+  if (!username) {
+    console.warn('Button clicked but no username found', target);
+    return;
+  }
+
+  console.log('List button clicked:', target.className, username);
 
   if (target.classList.contains('edit')) {
     openEditModal(username);
@@ -227,11 +267,20 @@ function handleListCheckboxChange(e) {
 
 // Open edit modal for a user
 function openEditModal(username) {
+  console.log('Opening edit modal for:', username);
   const user = state.getBlockedUsers().find(u => u.username === username);
-  if (!user) return;
+  
+  if (!user) {
+    console.error('User not found in state:', username);
+    return;
+  }
 
   // Set current edit data in state
-  state.setCurrentEditTags(user.tags || []);
+  if (typeof state.setCurrentEditTags === 'function') {
+    state.setCurrentEditTags(user.tags || []);
+  } else {
+    state.currentEditTags = user.tags || [];
+  }
   
   // Populate form
   const editUsername = document.getElementById('editUsername');
@@ -245,10 +294,12 @@ function openEditModal(username) {
   tagsManager.renderEditTags();
   
   // Store username in modal for later use
-  if (editModal) editModal.dataset.username = username;
-  
-  // Open modal
-  modalManager.open('editModal');
+  if (editModal) {
+    editModal.dataset.username = username;
+    modalManager.open('editModal');
+  } else {
+    console.error('Edit modal element not found');
+  }
 }
 
 // Handle save edit

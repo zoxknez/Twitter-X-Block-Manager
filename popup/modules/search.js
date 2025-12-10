@@ -10,6 +10,9 @@ export class SearchManager {
     const searchTerm = query.toLowerCase().trim();
     const blockedUsers = this.state.getBlockedUsers();
     
+    // Reset to page 1 on new search
+    this.state.setCurrentPage(1);
+
     if (!searchTerm) {
       this.listRenderer.render(this.applyTimeFilter(blockedUsers));
       return;
@@ -28,6 +31,7 @@ export class SearchManager {
   }
 
   filterByTag(tag) {
+    this.state.setCurrentPage(1); // Reset to page 1
     const blockedUsers = this.state.getBlockedUsers();
     const filtered = blockedUsers.filter(user => 
       user.tags && user.tags.includes(tag)

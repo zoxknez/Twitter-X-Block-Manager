@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=420, initial-scale=1.0">
   <title>Twitter/X Block Manager</title>
   <link rel="stylesheet" href="popup.css">
+  <link rel="stylesheet" href="pagination.css">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="compact.css">
 </head>
 <body>
   <!-- Left Panel -->
@@ -236,7 +239,7 @@
     </div>
     
     <!-- Search and Filters -->
-    <div class="right-panel-search">
+    <div class="right-panel-search" id="searchPanel">
       <div class="search-box">
         <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="8"></circle>
@@ -278,7 +281,7 @@
     <!-- Blocked Users List -->
     <div class="right-panel-content">
       <div id="listContainer" class="list-container">
-        <div class="list-header">
+        <div class="list-header" id="listHeader">
           <label class="checkbox-wrapper">
             <input type="checkbox" id="selectAll" class="select-all-checkbox">
             <span class="checkbox-label" data-i18n="selectAll">Izaberi sve</span>
@@ -288,6 +291,16 @@
         
         <div id="blockedList" class="blocked-list">
           <!-- Loaded dynamically -->
+        </div>
+
+        <!-- View All Button (Dashboard Mode) -->
+        <div id="viewAllContainer" class="view-all-container" style="display: none;">
+          <button id="viewAllBtn" class="view-all-btn">
+            <span data-i18n="viewAllBtn">Prikaži sve</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
         </div>
 
         <!-- Empty State -->

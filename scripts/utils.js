@@ -225,20 +225,25 @@ const LanguageManager = {
 const ProfileDetector = {
   // Check if current URL is a Twitter/X profile page
   isProfilePage(url = window.location.href) {
+    // Remove query parameters and hash for checking
+    const cleanUrl = url.split('?')[0].split('#')[0];
+    
     // Match profile URLs like: https://x.com/username or https://twitter.com/username
     // Exclude: /home, /explore, /notifications, /messages, /search, /i/, /compose, /settings
     const profileRegex = /^https?:\/\/(twitter|x)\.com\/([a-zA-Z0-9_]{1,15})\/?$/;
     const excludePaths = ['/home', '/explore', '/notifications', '/messages', '/search', '/i/', '/compose', '/settings', '/status/', '/with_replies', '/media', '/likes', '/following', '/followers'];
     
-    const match = profileRegex.test(url);
-    const hasExcludedPath = excludePaths.some(path => url.includes(path));
+    const match = profileRegex.test(cleanUrl);
+    const hasExcludedPath = excludePaths.some(path => cleanUrl.includes(path));
     
     return match && !hasExcludedPath;
   },
 
   // Extract username from URL
   getUsernameFromUrl(url = window.location.href) {
-    const match = url.match(/^https?:\/\/(twitter|x)\.com\/([a-zA-Z0-9_]{1,15})\/?$/);
+    // Remove query parameters and hash
+    const cleanUrl = url.split('?')[0].split('#')[0];
+    const match = cleanUrl.match(/^https?:\/\/(twitter|x)\.com\/([a-zA-Z0-9_]{1,15})\/?$/);
     return match ? '@' + match[2] : null;
   },
 
@@ -423,3 +428,10 @@ if (typeof module !== 'undefined' && module.exports) {
     ToastNotification
   };
 }
+
+// Ensure global availability for other content scripts
+window.StorageManager = StorageManager;
+window.LanguageManager = LanguageManager;
+window.ProfileDetector = ProfileDetector;
+window.DOMHelper = DOMHelper;
+window.ToastNotification = ToastNotification;

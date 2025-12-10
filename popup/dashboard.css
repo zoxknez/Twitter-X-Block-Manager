@@ -1,0 +1,38 @@
+/* View All Button */
+.view-all-container {
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid var(--border-color);
+  margin-top: auto;
+}
+
+.view-all-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.view-all-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  transform: translateY(-1px);
+}
+
+body.dark-mode .view-all-btn {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .view-all-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}

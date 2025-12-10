@@ -6,6 +6,15 @@ export class UIState {
     this.currentLanguage = 'sr';
     this.currentTheme = 'light';
     this.currentEditTags = [];
+    this.viewMode = 'dashboard'; // 'dashboard' or 'list'
+  }
+
+  setViewMode(mode) {
+    this.viewMode = mode;
+  }
+
+  getViewMode() {
+    return this.viewMode;
   }
 
   setBlockedUsers(users) {
@@ -48,11 +57,28 @@ export class UIState {
     return this.currentTheme;
   }
 
-  setEditTags(tags) {
+  setCurrentEditTags(tags) {
     this.currentEditTags = tags;
   }
 
-  getEditTags() {
+  getCurrentEditTags() {
     return this.currentEditTags;
+  }
+
+  // Pagination
+  setCurrentPage(page) {
+    this.currentPage = page;
+  }
+
+  getCurrentPage() {
+    return this.currentPage || 1;
+  }
+
+  setItemsPerPage(count) {
+    this.itemsPerPage = count;
+  }
+
+  getItemsPerPage() {
+    return this.itemsPerPage || 10;
   }
 }
