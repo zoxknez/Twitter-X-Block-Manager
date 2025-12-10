@@ -125,4 +125,4 @@
 
 ---
 
-**Made with ❤️ for a better Twitter/X experience**
+**Made for a better Twitter/X experience**
