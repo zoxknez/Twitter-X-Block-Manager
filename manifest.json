@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "__MSG_extensionDescription__",
   "homepage_url": "https://github.com/zoxknez/Twitter-X-Block-Manager",
-  "default_locale": "sr",
+  "default_locale": "en",
   "permissions": [
     "storage",
     "activeTab",

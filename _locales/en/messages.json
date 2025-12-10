@@ -4,7 +4,7 @@
     "description": "Extension name"
   },
   "extensionDescription": {
-    "message": "Quickly block users on Twitter/X with Alt+B shortcut and manage blocked users through a manager.",
+    "message": "Effortlessly manage blocked users on X (Twitter). One-click block (Alt+B), stats, tags, import/export, and a powerful dashboard.",
     "description": "Extension description"
   },
   "commandDescription": {
