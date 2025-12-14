@@ -4,7 +4,7 @@
     "description": "Naziv ekstenzije"
   },
   "extensionDescription": {
-    "message": "Brzo blokirajte korisnike na Twitter/X sa Alt+B prečicom i upravljajte blokiranima kroz menadžer.",
+    "message": "Effortlessly manage blocked users on X (Twitter). One-click block (Alt+B), stats, tags, import/export, and a powerful dashboard.",
     "description": "Opis ekstenzije"
   },
   "commandDescription": {

@@ -1,4 +1,9 @@
 // Background Service Worker for Twitter/X Block Manager Extension
+try {
+  importScripts('analytics.js');
+} catch (e) {
+  console.error(e);
+}
 
 // Listen for keyboard command (Alt+B)
 chrome.commands.onCommand.addListener(async (command) => {
@@ -382,3 +387,27 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 });
 
 console.log('Background service worker loaded');
+
+// Analytics listeners
+chrome.runtime.onInstalled.addListener((details) => {
+  if (self.analytics) {
+    if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
+      self.analytics.fireEvent('extension_install');
+    } else if (details.reason === chrome.runtime.OnInstalledReason.UPDATE) {
+      self.analytics.fireEvent('extension_update');
+    }
+  }
+});
+
+chrome.runtime.onStartup.addListener(() => {
+  if (self.analytics) {
+    self.analytics.fireEvent('extension_startup');
+  }
+});
+
+// Listen for analytics events from other parts of the extension
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'track_event' && self.analytics) {
+    self.analytics.fireEvent(message.name, message.params);
+  }
+});

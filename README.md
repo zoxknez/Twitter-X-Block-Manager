@@ -119,8 +119,8 @@
 ## 🌟 Screenshots
 
 <p align="center">
-  <img src="screenshots/preview-1.png" alt="Extension Preview 1" width="45%">
-  <img src="screenshots/preview-2.png" alt="Extension Preview 2" width="45%">
+  <img src="screenshots/screenshot_dashboard_1280x800.png" alt="Extension Dashboard" width="45%">
+  <img src="screenshots/screenshot_list_1280x800.png" alt="Extension List View" width="45%">
 </p>
 
 ---
